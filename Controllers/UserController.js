@@ -118,6 +118,54 @@ export const register= async(req ,res)=> {
 
 
 
+    export const product =async(req,res)=>{
+        try{
+            const{ name,price,email} = req.body;
+            
+            if(!name) return res.send("name is required");
+            if(!email) return res.send("email is required");
+            if(!price) return res.send("price is required");
+
+
+            const user = await USER.find({email}).exec();
+            if(!user.length) return res.send("user not found");
+
+            const addproduct ={pname:name, pprice:price};
+            user[0].product.push(addproduct);
+
+            await user[0].save();
+            res.send("product added");
+            
+
+        }
+        catch(error){
+            res.send(error);
+        }
+    }
+
+
+
+
+    export const deleteproduct = async(req,res) =>{
+        try{
+            const {email} =req.body;
+            if(!email) return res.send("email is required");
+
+            const user= await USER.find({email}).exec();
+
+            if(!user.length) return res.send("user not found");
+            user[0].product =undefined;
+            await user[0].save();
+            
+            return res.send("product deldeted");
+
+        }
+        catch(error){
+            res.send(error);
+        }
+    }
+
+
 
 
    
